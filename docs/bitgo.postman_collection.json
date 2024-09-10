@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "91cc8414-fa95-4aab-be7b-f69d4298a69e",
+		"name": "bitgo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11886189",
+		"_collection_link": "https://backedn.postman.co/workspace/Beyond-Illusion~184f8083-83fe-4ae1-a240-23d70cb12aad/collection/11886189-91cc8414-fa95-4aab-be7b-f69d4298a69e?action=share&source=collection_link&creator=11886189"
+	},
+	"item": [
+		{
+			"name": "Create notification",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"current_price\": 45000.5,\n  \"daily_change_percentage\": 5.2,\n  \"trading_volume\": 123456,\n  \"emails\": [\"user1@example.com\", \"user2@example.com\"],\n  \"status\": \"Pending\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notifications",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST -H \"Content-Type: application/json\" -d '{\n  \"current_price\": 45000.5,\n  \"daily_change_percentage\": 5.2,\n  \"trading_volume\": 123456,\n  \"emails\": [\"user1@example.com\", \"user2@example.com\"],\n  \"status\": \"Pending\"\n}' http://localhost:8080/notifications\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Notification",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notifications/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X DELETE http://localhost:8080/notifications/{id}\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Notification",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"current_price\": 46000.0,\n  \"daily_change_percentage\": 3.5,\n  \"trading_volume\": 987654,\n  \"emails\": [\"user1@example.com\"],\n  \"status\": \"Sent\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notifications/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X PUT -H \"Content-Type: application/json\" -d '{\n  \"current_price\": 46000.0,\n  \"daily_change_percentage\": 3.5,\n  \"trading_volume\": 987654,\n  \"emails\": [\"user1@example.com\"],\n  \"status\": \"Sent\"\n}' http://localhost:8080/notifications/1\n"
+			},
+			"response": []
+		},
+		{
+			"name": "List Notification",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notifications?status=Pending",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "Pending"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"http://localhost:8080/notifications?status=Pending\"\n"
+			},
+			"response": []
+		}
+	]
+}
