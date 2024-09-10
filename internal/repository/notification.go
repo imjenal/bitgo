@@ -4,6 +4,7 @@ import (
 	"bitgo/internal/models"
 	"database/sql"
 	"errors"
+	"github.com/lib/pq"
 )
 
 type NotificationRepository interface {
@@ -23,8 +24,9 @@ func NewPostgresNotificationRepository(db *sql.DB) *PostgresNotificationReposito
 
 func (r *PostgresNotificationRepository) Create(notification *models.Notification) (int, error) {
 	query := `INSERT INTO notifications (current_price, daily_change_percentage, trading_volume, emails, status) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+
 	var id int
-	err := r.DB.QueryRow(query, notification.CurrentPrice, notification.DailyChangePercentage, notification.TradingVolume, notification.Emails, notification.Status).Scan(&id)
+	err := r.DB.QueryRow(query, notification.CurrentPrice, notification.DailyChangePercentage, notification.TradingVolume, pq.Array(notification.Emails), notification.Status).Scan(&id)
 	return id, err
 }
 
@@ -39,11 +41,13 @@ func (r *PostgresNotificationRepository) GetByStatus(status string) ([]models.No
 	var notifications []models.Notification
 	for rows.Next() {
 		var notification models.Notification
+		var emails []string
 		if err := rows.Scan(&notification.ID, &notification.CurrentPrice,
-			&notification.DailyChangePercentage, &notification.TradingVolume, &notification.Emails,
+			&notification.DailyChangePercentage, &notification.TradingVolume, pq.Array(emails),
 			&notification.Status, &notification.CreatedAt, &notification.UpdatedAt); err != nil {
 			return nil, err
 		}
+		notification.Emails = emails
 		notifications = append(notifications, notification)
 	}
 	if err = rows.Err(); err != nil {
@@ -53,9 +57,10 @@ func (r *PostgresNotificationRepository) GetByStatus(status string) ([]models.No
 }
 
 func (r *PostgresNotificationRepository) Update(notification *models.Notification) error {
-	query := `UPDATE notifications SET current_price = $1, daily_change_percentage = $2, trading_volume =$3, emails = $4, status =$5 updated_at = NOW() WHERE id =$6`
-	result, err := r.DB.Exec(query, notification.CurrentPrice, notification.DailyChangePercentage, notification.TradingVolume, notification.Emails,
+	query := `UPDATE notifications SET current_price = $1, daily_change_percentage = $2, trading_volume =$3, emails = $4, status =$5,updated_at = NOW() WHERE id =$6`
+	result, err := r.DB.Exec(query, notification.CurrentPrice, notification.DailyChangePercentage, notification.TradingVolume, pq.Array(notification.Emails),
 		notification.Status, notification.ID)
+
 	if err != nil {
 		return err
 	}
